@@ -1,43 +1,53 @@
-#include <iostream>
-
+#include<iostream>
+#include<algorithm>
 using namespace std;
 
-
-struct Node
-{
-    Node *left;
-    int data;
-    Node *right;
+struct Node{
+	int data;
+	Node *left;
+	Node *right;
 };
-Node *newNode(int data){
-    
-    Node *temp = new Node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
+
+int hasPathSum(Node* root, int sum){
+	if(!root) return (sum==0);
+	return hasPathSum(root->left, sum-root->data) || hasPathSum(root->right, sum-root->data);
 }
 
-bool HasPathSum(Node *root, int sum){
-	if(!root) return(sum==0);
-	int remainingSum = sum - root->data;
-	
-	if(remainingSum==0&&!root->left&&!root->right) return 1;
-	bool ans=0;
-	if(root->left) ans = ans||HasPathSum(root->left,remainingSum);
-	if(root->right) ans = ans||HasPathSum(root->right,remainingSum);
-	
-	return ans;
+
+Node* newnode(int data)
+{
+  Node *node = new Node;
+  node->data = data;
+  node->left = NULL;
+  node->right = NULL;
+  return(node);
 }
-int main() {
-     Node *root = newNode(1);
-    root->left = newNode(2);
-    root->right = newNode(3);
-    root->left->left = newNode(4);
-    root->left->right = newNode(5);
-    root->right->right = newNode(6);
+int main()
+{
  
-    cout<<HasPathSum(root,10);
-	
-	return 0;
+  int sum = 14;
+ 
+  /* Constructed binary tree is
+            10
+          /   \
+        8      2
+      /  \    /
+    3     5  2
+  */
+  Node *root = newnode(10);
+  root->left        = newnode(8);
+  root->right       = newnode(2);
+  root->left->left  = newnode(3);
+  root->left->right = newnode(5);
+  root->right->left = newnode(2);
+ 
+  if(hasPathSum(root, sum))
+    printf("There is a root-to-leaf path with sum %d", sum);
+  else
+    printf("There is no root-to-leaf path with sum %d", sum);
+ 
+  getchar();
+  return 0;
 }
+
+

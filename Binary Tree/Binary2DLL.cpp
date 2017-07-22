@@ -1,62 +1,56 @@
-#include <iostream>
-
+#include<iostream>
+#include<stack>
 using namespace std;
 
-
-struct Node
-{
-    Node *left;
-    int data;
-    Node *right;
+struct Node{
+	int data;
+	Node *left;
+	Node *right;
 };
-Node *newNode(int data){
-    
-    Node *temp = new Node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
+
+Node* newNode(int data)
+{
+  Node *node = new Node;
+  node->data = data;
+  node->left = NULL;
+  node->right = NULL;
+  return(node);
 }
 
-Node *Binary2DLL(Node *root){
-	if(!root) return NULL;
-
-    if(root->left != NULL){
-    	Node *left = Binary2DLL(root->left);
-    	while(left->right)
-    	    left = left->right;
-    	left->right = root;
-		root->left  = left;      
+void Binary2DLL(Node *root, Node **head){
+	if(!root) return;
+	static Node* prev = NULL;
+	Binary2DLL(root->left, head);
+	if(!prev) *head = root;
+	else{
+		root->left = prev;
+		prev->right = root;
 	}
-    if(root->right != NULL){
-    	Node *right = Binary2DLL(root->right);
-    	while(right->left)
-    	    right = right->left;
-    	right->left = root;
-		root->right = right;     
-	
-	}
- 	
-	return root;
+	prev = root;
+	Binary2DLL(root->right, head);
 }
 
-int main() {
-     Node *root = newNode(1);
-    root->left = newNode(2);
-    root->right = newNode(3);
-    root->left->left = newNode(4);
-    root->left->right = newNode(5);
-    root->right->right = newNode(6);
-    root->right->right->left = newNode(7);
-    root->right->right->right = newNode(8);
-    
-    Node *head = Binary2DLL(root);
-    while(head->left ) 
-         head = head->left;
-    while(head){
-    	cout<<head->data<<"	";
-    	head = head->right;
-	}
-	
-	return 0;
+int main()
+{
+    /* Constructed binary tree is
+            10
+          /   \
+        8      2
+      /  \    /
+    3     5  2
+  */
+  Node *root = newNode(10);
+  root->left        = newNode(8);
+  root->right       = newNode(2);
+  root->left->left  = newNode(3);
+  root->left->right = newNode(5);
+  root->right->left = newNode(2);
+  
+  Node *head = NULL;
+  Binary2DLL(root, &head);
+  while(head){
+  	cout<<head->data<<" ";
+  	head = head->right;
+  }
+  return 0;
 }

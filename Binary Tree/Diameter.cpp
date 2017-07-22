@@ -1,48 +1,46 @@
-#include <iostream>
-
+#include<iostream>
 using namespace std;
 
-
-struct Node
-{
-    Node *left;
-    int data;
-    Node *right;
+struct Node{
+	int data;
+	Node *left;
+	Node *right;
 };
-Node *newNode(int data){
-    
-    Node *temp = new Node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
+
+int Diameter(Node* root, int *height){
+	int lh=0,rh=0;
+	if(!root){
+		*height = 0;
+		return 0;
+	}
+	int lDiameter = Diameter(root->left, &lh);
+	int rDiameter = Diameter(root->right, &rh);
+	*height = max(lh,rh)+1;
+	return max(lh+rh+1,max(lDiameter, rDiameter));	
 }
 
-int Height(Node *root){
-	if(!root) return 0;
-	return(max(Height(root->left),Height(root->right))+1);
-}
 
-int Diameter(Node *root){
-	if(!root) return 0;
-	int lHeight = Height(root->left);
-	int rHeight = Height(root->right);
-	
-	int lDiameter = Diameter(root->left);
-	int rDiameter = Diameter(root->right);
-     
-    return max((lHeight+rHeight+1),max(lDiameter,rDiameter)); 
+Node* newNode(int data)
+{
+  Node *node = new Node;
+  node->data = data;
+  node->left = NULL;
+  node->right = NULL;
+  return(node);
 }
-
-int main() {
-     Node *root = newNode(1);
-    root->left = newNode(2);
-    root->right = newNode(3);
-    root->left->left = newNode(4);
-    root->left->right = newNode(5);
-    root->right->right = newNode(6);
  
-    cout<<Diameter(root);
-	
-	return 0;
+/* Driver program to test above functions */
+int main()
+{
+  Node *root = newNode(50);
+  root->left        = newNode(7);
+  root->right       = newNode(2);
+  root->left->left  = newNode(3);
+  root->left->right = newNode(5);
+  root->right->left  = newNode(1);
+  root->right->right = newNode(30);
+  int height = 0;
+  cout<<Diameter(root,&height);
+  return 0;
 }
+

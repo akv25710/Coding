@@ -1,52 +1,60 @@
-#include <iostream>
-
+#include<iostream>
 using namespace std;
 
-
-struct Node
-{
-    Node *left;
-    int data;
-    Node *right;
-    Node *next;
+struct Node{
+	int data;
+	Node *left;
+	Node *right;
+	Node *next;
 };
-Node *newNode(int data){
-    
-    Node *temp = new Node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
-    temp->next = NULL;
-    return temp;
-}
+
 void InorderSuccessor(Node *root){
 	if(!root) return;
-	
-	static Node *temp = NULL;
+	static Node* next = NULL;
 	InorderSuccessor(root->right);
-	root->next = temp;
-	temp = root;
-	InorderSuccessor(root->left);	
+	root->next = next;
+	next = root;
+	InorderSuccessor(root->left);
 }
 
-int main() {
-     Node *root = newNode(1);
-    root->left = newNode(2);
-    root->right = newNode(3);
-    root->left->left = newNode(4);
-    root->left->right = newNode(5);
-    root->right->right = newNode(6);
-    root->right->left = newNode(7);
-    
-    InorderSuccessor(root);
-    Node *temp = root->left->left;
-    
-    while(temp){
-    	cout<<temp->data<<" ";
-    	temp = temp->next;
-	}
- 
- 
-	
-	return 0;
+Node* newnode(int data)
+{
+  Node *node = new Node;
+  node->data = data;
+  node->left = NULL;
+  node->right = NULL;
+  return(node);
 }
+
+int main()
+{
+ 
+    /* Constructed binary tree is
+              10
+            /   \
+          8      12
+        /
+      3
+    */
+    Node *root = newnode(10);
+    root->left        = newnode(8);
+    root->right       = newnode(12);
+    root->left->left  = newnode(3);
+ 
+    // Populates nextRight pointer in all nodes
+    InorderSuccessor(root);
+ 
+    // Let us see the populated values
+    Node *ptr = root->left->left;
+    while(ptr)
+    {
+        // -1 is printed if there is no successor
+        printf("Next of %d is %d \n", ptr->data, ptr->next? ptr->next->data: -1);
+        ptr = ptr->next;
+    }
+ 
+    return 0;
+}
+
+
+

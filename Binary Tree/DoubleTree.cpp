@@ -1,51 +1,71 @@
-#include <iostream>
-
+#include<iostream>
+#include<algorithm>
 using namespace std;
 
-
-struct Node
-{
-    Node *left;
-    int data;
-    Node *right;
+struct Node{
+	int data;
+	Node *left;
+	Node *right;
 };
-Node *newNode(int data){
-    
-    Node *temp = new Node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
-}
-void Inorder(Node *root){
-	if(!root) return;
-	Inorder(root->left);
-	cout<<root->data<<" ";
-	Inorder(root->right);
+
+Node* newNode(int data)
+{
+  Node *node = new Node;
+  node->data = data;
+  node->left = NULL;
+  node->right = NULL;
+  return(node);
 }
 
 void DoubleTree(Node *root){
 	if(!root) return;
-	DoubleTree(root->left);
+	Node *temp;
+	if(root->left){
+		temp = root->left;
+		root->left = newNode(root->data);
+		root->left->left = temp;
+	}
+	else	
+		root->left = newNode(root->data);
+	DoubleTree(root->left->left);
 	DoubleTree(root->right);
-	
-	Node *node = newNode(root->data);
-	
-	Node *temp = root->left;
-	root->left = node;
-	node->left = temp;
 }
 
-int main() {
-     Node *root = newNode(1);
-    root->left = newNode(2);
-    root->right = newNode(3);
-    root->left->left = newNode(4);
-    root->left->right = newNode(5);
-    root->right->right = newNode(6);
+void printInorder(Node* node)
+{
+  if (node == NULL)
+    return;
+  printInorder(node->left); 
+  printf("%d ", node->data);
+  printInorder(node->right);
+}
+  
+  
+/* Driver program to test above functions*/
+int main()
+{
+  
+  /* Constructed binary tree is
+            1
+          /   \
+        2      3
+      /  \
+    4     5
+  */
+  Node *root = newNode(1);
+  root->left        = newNode(2);
+  root->right       = newNode(3);
+  root->left->left  = newNode(4);
+  root->left->right = newNode(5);
+  
+  printf("Inorder traversal of the original tree is \n");
+  printInorder(root);
  
-    DoubleTree(root);
-    Inorder(root);
-	
-	return 0;
+  DoubleTree(root);
+   
+  printf("\n Inorder traversal of the double tree is \n");  
+  printInorder(root);
+    
+  getchar();
+  return 0;
 }

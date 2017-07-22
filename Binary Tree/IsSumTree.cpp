@@ -1,41 +1,57 @@
-#include <iostream>
-
+#include<iostream>
 using namespace std;
 
-
-struct Node
-{
-    Node *left;
-    int data;
-    Node *right;
+struct Node{
+	int data;
+	Node *left;
+	Node *right;
 };
-Node *newNode(int data){
-    
-    Node *temp = new Node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
+
+int isLeaf(Node *root){
+	if(!root) return 0;
+	return !root->left && !root->right;
 }
 
-bool IsSumTree(Node *root, int root_data){
-	if(!root) return root_data==0;
-	int left=0,right=0;
-    if(root->left) left = root->left->data;
-    if(root->right) right = root->right->data;
-    
-	return (root_data == left + right) && IsSumTree(root->left,root_data-left) && IsSumTree(root->right,root_data-right);
+bool isSumTree(Node *root){
+	if(!root ) return true;
+	int left,right;
+	if(isSumTree(root->left) || isSumTree(root->right)){
+		if(!root->left) left = 0;
+		else if(isLeaf(root->left)) left = root->left->data;
+		else left = 2 * root->left->data;
+		
+		if(!root->right) right = 0;
+		else if(isLeaf(root->right)) right = root->right->data;
+		else right = 2 * root->right->data;
+		return left+right == root->data;
+	}
+	return 0;
 }
 
-int main() {
-     Node *root  = newNode(26);
+
+Node* newNode(int data)
+{
+  Node *node = new Node;
+  node->data = data;
+  node->left = NULL;
+  node->right = NULL;
+  return(node);
+}
+int main()
+{
+    Node *root  = newNode(26);
     root->left         = newNode(10);
     root->right        = newNode(3);
     root->left->left   = newNode(4);
     root->left->right  = newNode(6);
     root->right->right = newNode(3);
+    if(isSumTree(root))
+        printf("The given tree is a SumTree ");
+    else
+        printf("The given tree is not a SumTree ");
  
-    cout<<IsSumTree(root,26);
-	
-	return 0;
+    getchar();
+    return 0;
 }
+
+

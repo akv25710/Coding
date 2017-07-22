@@ -1,57 +1,53 @@
-#include <iostream>
-#include <queue>
+#include<iostream>
+#include<queue>
 using namespace std;
 
-
-struct node
-{
-    node *left;
-    int data;
-    node *right;
+struct Tree{
+	int data;
+	Tree *left;
+	Tree *right;
 };
-node *newNode(int data){
-    
-    node *temp = new node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
+
+void LevelOrder(Tree *root){
+	queue<Tree*> Q;
+	Q.push(root);
+	Tree *front = root;
+	int nodecount=0;
+	while(1){
+		int nodecount = Q.size();
+		if(nodecount==0) return;
+		while(nodecount){
+			front = Q.front();
+			Q.pop();
+			cout<<front->data<<" ";
+			if(front->left) Q.push(front->left);
+			if(front->right) Q.push(front->right);
+			nodecount--;
+		}
+		cout<<endl;
+	}
 }
 
-void printLevelOrder(node *root){
-    
-    if(!root) return;
-    node *temp;
-    std::queue <node*> Q;
-    Q.push(root);
-    Q.push(NULL);
-    while(!Q.empty()){
-        temp = Q.front();
-        Q.pop();
-        if(!temp){
-            cout<<endl;
-            if(!Q.empty()) Q.push(NULL);
-        }
-        else{
-            cout<<temp->data<<" ";
-            if(temp->left) Q.push(temp->left);
-            if(temp->right) Q.push(temp->right);
-            
-        }
-    }
-}
+Tree* newNode(int data)
+{
+    Tree *node = new Tree;
+    node->data = data;
+    node->left = NULL;
+    node->right = NULL;
  
+    return(node);
+}
 
-
-int main() {
-     node *root = newNode(1);
-    root->left = newNode(2);
-    root->right = newNode(3);
-    root->left->left = newNode(4);
+int main()
+{
+    struct Tree *root = newNode(1);
+    root->left        = newNode(2);
+    root->right       = newNode(3);
+    root->left->left  = newNode(4);
     root->left->right = newNode(5);
-    root->right->right = newNode(6);
  
-    printLevelOrder(root);
-	//code
-	return 0;
+    printf("Level Order traversal of binary tree is \n");
+    LevelOrder(root);
+ 
+    return 0;
 }

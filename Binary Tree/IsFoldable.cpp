@@ -1,44 +1,51 @@
-#include <iostream>
-
+#include<iostream>
 using namespace std;
 
-
-struct Node
-{
-    Node *left;
-    int data;
-    Node *right;
+struct Node{
+	int data;
+	Node *left;
+	Node *right;
 };
+
 Node *newNode(int data){
-    
-    Node *temp = new Node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
+	Node *root = new Node;
+	root->data = data;
+	root->left = NULL;
+	root->right = NULL;
+	return root;
 }
 
-bool AreMirrors(Node *root1, Node *root2){
+bool isMirror(Node *root1, Node *root2){
 	if(!root1 && !root2) return 1;
 	if(!root1 || !root2) return 0;
-	
-	return AreMirrors(root1->left,root2->right)&&AreMirrors(root1->right,root2->left);
+	return isMirror(root1->left, root2->right) && isMirror(root1->right, root2->left);
 }
 
-bool IsFoldable(Node *root){
+bool isFoldable(Node *root){
 	if(!root) return true;
-    return AreMirrors(root->left,root->right);
+	return isMirror(root->left,root->right);
 }
 
-int main() {
-     Node *root = newNode(1);
-    root->left = newNode(2);
-    root->right = newNode(3);
-    root->left->left = newNode(4);
-    root->left->right = newNode(5);
-    root->right->right = newNode(6);
+int main(void)
+{
+  /* The constructed binary tree is
+         1
+       /   \
+      2     3
+      \    /
+       4  5
+  */
+  Node *root = newNode(1);
+  root->left        = newNode(2);
+  root->right       = newNode(3);
+  root->right->left  = newNode(4);
+  root->left->left = newNode(5);
  
-    cout<<IsFoldable(root);
-	
-	return 0;
+  if(isFoldable(root) == 1)
+  { printf("\n tree is foldable"); }
+  else
+  { printf("\n tree is not foldable"); }
+ 
+  getchar();
+  return 0;
 }
